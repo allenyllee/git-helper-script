@@ -17,10 +17,16 @@ done
 # force clean unstage files
 git clean -f
 
+# get current branch
+CURR_BRANCH=$(git branch | grep \* | cut -d" " -f2)
+
 # restore stash from stash_$sha branch
 for a in $(git rev-list --no-walk --glob='refs/heads/stash_*' | tac);
     do git checkout $a && git reset HEAD^ && git add . && git stash save "$(git log --format='%s' -1 HEAD@{1})";
 done
+
+# checkout current branch
+git checkout $CURR_BRANCH
 
 ##############
 # clean-up stash_$sha branch
@@ -31,3 +37,4 @@ done
 #    select only these characters
 ##############
 git branch -D $(git branch|cut -c3-|grep ^stash_)
+

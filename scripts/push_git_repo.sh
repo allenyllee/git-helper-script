@@ -8,9 +8,9 @@ echo "$filename REPO_URL=$REPO_URL"
 git remote remove gitlab
 git remote add gitlab $REPO_URL
 #echo "debug1"
-git push gitlab --all
+git push gitlab -f --all
 #echo "debug2"
-git push gitlab --tags
+git push gitlab -f --tags
 
 echo ""
 echo ""
