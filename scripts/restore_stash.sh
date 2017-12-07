@@ -18,6 +18,8 @@ done
 git clean -f
 
 # get current branch
+# How to get the current branch name in Git? - Stack Overflow
+# https://stackoverflow.com/questions/6245570/how-to-get-the-current-branch-name-in-git
 CURR_BRANCH=$(git branch | grep \* | cut -d" " -f2)
 
 # restore stash from stash_$sha branch

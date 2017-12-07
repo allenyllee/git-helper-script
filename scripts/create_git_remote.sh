@@ -18,11 +18,15 @@ echo "$PROJECT_ID"
 echo ""
 
 # create default branch
+# Branches API - GitLab Documentation
+# https://docs.gitlab.com/ce/api/branches.html#create-repository-branch
 curl -s --header "PRIVATE-TOKEN: $TOKEN" -X POST "$API/$PROJECT_ID/repository/branches?branch=$DEFAULT_BRANCH&ref=master"
 echo ""
 echo ""
 
 # set default branch
+# Projects API - GitLab Documentation
+# https://docs.gitlab.com/ce/api/projects.html#edit-project
 curl -s --header "PRIVATE-TOKEN: $TOKEN" -X PUT "$API/$PROJECT_ID?default_branch=$DEFAULT_BRANCH"
 echo ""
 echo ""

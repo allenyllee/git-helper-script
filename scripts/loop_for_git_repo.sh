@@ -16,6 +16,10 @@ loopforall(){
     done
 }
 
+# linux - Using grep to search for a string that has a dot in it - Stack Overflow
+# https://stackoverflow.com/questions/10346816/using-grep-to-search-for-a-string-that-has-a-dot-in-it
+# you'll need to use \\. for bash too, or use "\." to escape it from the shell.
+
 searchgit(){
     if [ -n "$(ls -a | grep \\.git)" ];
     then
