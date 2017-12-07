@@ -12,6 +12,8 @@
 
 # source directory of this script
 SOURCE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# base dir of this script to exclude
+BASE_DIR="$(basename $SOURCE_DIR)"
 # helper scripts path
 SCRIPT_PATH="$SOURCE_DIR/scripts"
 
@@ -19,4 +21,4 @@ DEBUG=$1
 
 $SCRIPT_PATH/loop_for_git_repo.sh " \
     $SCRIPT_PATH/checkout_all_branch.sh\; \
-    $SCRIPT_PATH/restore_stash.sh" "$DEBUG"
+    $SCRIPT_PATH/restore_stash.sh" "$BASE_DIR" "$DEBUG"
