@@ -4,6 +4,7 @@ COMMAND=$1
 EXCLUDE=$2
 DEBUG=$3
 
+
 echo "$EXCLUDE"
 
 # directory - Listing only directories using ls in bash: An examination - Stack Overflow
@@ -15,10 +16,28 @@ echo "$EXCLUDE"
 #  forcing grep to interpret the pattern as an extended regular expression using -E works, i.e. grep -vE 'negphrase1|negphrase2|negphrase3'
 
 loopforall(){
-    for dir in $(ls -a -d */ | grep -vE "$EXCLUDE" 2>/dev/null);
+    level_loopforall=$(($level_loopforall+1))
+    if [ $level_loopforall -eq 1 ]; then
+        echo "****************** level 0 ******************";
+    fi
+
+    local ret_loopforall=0
+    local tmp_loopforall=0
+
+    for dir in $(ls -a -d */ 2>/dev/null | grep -vE "$EXCLUDE" 2>/dev/null);
         do  #echo "current dir is $dir and parent dir is $2";
-            cd $dir && $1; cd $2 >/dev/null;
+            #echo "before ret=$ret_loopforall tmp=$tmp_loopforall";
+            cd $dir && $1; tmp_loopforall=$?; cd $2 >/dev/null;
+            ret_loopforall=`expr $ret_loopforall + $tmp_loopforall`;
+            #echo "after ret=$ret_loopforall tmp=$tmp_loopforall";
     done
+
+    if [ $level_loopforall -eq 1 ]; then
+        echo "****************** end of level 0 ***********";
+    fi
+    level_loopforall=$(($level_loopforall-1))
+
+    return $ret_loopforall
 }
 
 # linux - Using grep to search for a string that has a dot in it - Stack Overflow
@@ -26,21 +45,46 @@ loopforall(){
 # you'll need to use \\. for bash too, or use "\." to escape it from the shell.
 
 searchgit(){
+    level_searchgit=$(($level_searchgit+1))
+
+    local ret_searchgit=0
+
     if [ -n "$(ls -a | grep \\.git)" ];
     then
         if [ "$DEBUG" == "-d" ];
         then
-            echo "current dir is $PWD"
+            #echo "current dir is $PWD"
             echo $(eval echo "$COMMAND")
         else
             eval $(eval echo "$COMMAND")
         fi
-        echo ""
-        echo "============="
-        echo ""
+        ret_searchgit=1
+
+        if [ $level_loopforall -eq 1 ]; then
+            echo "";
+        fi
+
+        level_searchgit=$(($level_searchgit-1))
+        return $ret_searchgit
     else
+        echo "========= level $level_searchgit =============="
         loopforall searchgit "$(pwd)"
+        ret_searchgit=$?
+        echo "ret_searchgit=$ret_searchgit"
+        echo "========= end of level $level_searchgit ======="
+
+        if [ $level_searchgit -eq 1 ]; then
+            echo "";
+        fi
+
+        level_searchgit=$(($level_searchgit-1))
+        return $ret_searchgit
     fi
 }
 
+echo ""
+
 loopforall searchgit "$(pwd)"
+ret_total=$?
+
+echo "total number: $ret_total"
