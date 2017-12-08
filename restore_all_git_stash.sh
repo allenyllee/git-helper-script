@@ -2,12 +2,14 @@
 
 ###############################
 # usage:
-#       ./git-helper-script/restore_all_git_stash.sh [debug]
+#       ./git-helper-script/restore_all_git_stash.sh [exclude] [debug]
 # ex:
 #   test without execute:
-#       ./git-helper-script/restore_all_git_stash.sh -d
+#       ./git-helper-script/restore_all_git_stash.sh "pattern1|pattern2|pattern3" -d
 #   normal execute:
-#       ./git-helper-script/restore_all_git_stash.sh
+#       ./git-helper-script/restore_all_git_stash.sh "pattern1|pattern2|pattern3"
+#   for all:
+#       ./git-helper-script/restore_all_git_stash.sh " "
 ################################
 
 # shell - How to get the last part of dirname in Bash - Stack Overflow
@@ -22,8 +24,10 @@ BASE_DIR="$(basename $SOURCE_DIR)"
 # helper scripts path
 SCRIPT_PATH="$SOURCE_DIR/scripts"
 
-DEBUG=$1
+EXCLUDE=$1
+DEBUG=$2
+
 
 $SCRIPT_PATH/loop_for_git_repo.sh " \
     $SCRIPT_PATH/checkout_all_branch.sh\; \
-    $SCRIPT_PATH/restore_stash.sh" "$BASE_DIR" "$DEBUG"
+    $SCRIPT_PATH/restore_stash.sh" "$BASE_DIR|$EXCLUDE" "$DEBUG"
