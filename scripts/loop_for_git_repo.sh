@@ -24,13 +24,18 @@ loopforall(){
     local ret_loopforall=0
     local tmp_loopforall=0
 
+    local OLD_IFS=$IFS     # Stores Default IFS
+    IFS=$'\n'        # Set it to line break
+
     for dir in $(ls -a -d */ 2>/dev/null | grep -vE "$EXCLUDE" 2>/dev/null);
         do  #echo "current dir is $dir and parent dir is $2";
             #echo "before ret=$ret_loopforall tmp=$tmp_loopforall";
-            cd $dir && $1; tmp_loopforall=$?; cd $2 >/dev/null;
+            cd "$dir" && $1; tmp_loopforall=$?; cd $2 >/dev/null;
             ret_loopforall=`expr $ret_loopforall + $tmp_loopforall`;
             #echo "after ret=$ret_loopforall tmp=$tmp_loopforall";
     done
+
+    IFS=$OLD_IFS
 
     if [ $level_loopforall -eq 1 ]; then
         echo "****************** end of level 0 ***********";
@@ -45,12 +50,43 @@ loopforall(){
 # you'll need to use \\. for bash too, or use "\." to escape it from the shell.
 
 searchgit(){
-    level_searchgit=$(($level_searchgit+1))
+    if [ -z "$level_searchgit" ]; then
+        level_searchgit=$(($level_searchgit+1))
+        echo "========= level $level_searchgit =============="
+    fi
 
     local ret_searchgit=0
 
     if [ -n "$(ls -a | grep \\.git)" ];
     then
+        #if [ $level_searchgit -eq 1 ]; then
+        #    echo "========= level $level_searchgit =============="
+        #fi
+
+        if [ -n "$(ls -a | grep \\.gitmodules)" ]; then
+            level_searchgit=$(($level_searchgit+1))
+
+            if [ $level_searchgit -gt 1 ]; then
+                echo "========= level $level_searchgit =============="
+            fi
+            #local tmp=$level_searchgit
+            #echo "========= level $(($level_searchgit)) =============="
+            loopforall searchgit "$(pwd)"
+            ret_searchgit=$?
+            #echo "ret_searchgit=$ret_searchgit"
+            #if [ $level_searchgit -eq $tmp ]; then
+            #    echo "========= end of level $level_searchgit =============="
+            #fi
+            if [ $level_searchgit -gt 1 ]; then
+                echo "ret_searchgit=$ret_searchgit"
+                echo "========= end of level $(($level_searchgit)) ======="
+            fi
+            #echo "========= end of level $(($level_searchgit)) ======="
+            level_searchgit=$(($level_searchgit-1))
+        fi
+
+
+
         if [ "$DEBUG" == "-d" ];
         then
             #echo "current dir is $PWD"
@@ -58,26 +94,42 @@ searchgit(){
         else
             eval $(eval echo "$COMMAND")
         fi
-        ret_searchgit=1
+        #ret_searchgit=1
+        ret_searchgit=$(($ret_searchgit+1))
 
-        if [ $level_loopforall -eq 1 ]; then
-            echo "";
-        fi
+        #if [ $level_searchgit -eq 1 ]; then
+        #    echo "ret_searchgit=$ret_searchgit"
+        #    echo "========= end of level $level_searchgit =============="
+        #fi
 
-        level_searchgit=$(($level_searchgit-1))
+
+        #if [ $level_loopforall -eq 1 ]; then
+        #    echo "";
+        #fi
+
+        #level_searchgit=$(($level_searchgit-1))
         return $ret_searchgit
     else
-        echo "========= level $level_searchgit =============="
+        #if [ $level_searchgit -eq 1 ]; then
+        #    echo "========= level $level_searchgit =============="
+        #fi
+
+        #echo "========= level $level_searchgit =============="
         loopforall searchgit "$(pwd)"
         ret_searchgit=$?
-        echo "ret_searchgit=$ret_searchgit"
-        echo "========= end of level $level_searchgit ======="
+        #echo "ret_searchgit=$ret_searchgit"
+        #echo "========= end of level $level_searchgit ======="
 
-        if [ $level_searchgit -eq 1 ]; then
-            echo "";
-        fi
+        #if [ $level_searchgit -eq 1 ]; then
+        #    echo "ret_searchgit=$ret_searchgit"
+        #    echo "========= end of level $level_searchgit =============="
+        #fi
 
-        level_searchgit=$(($level_searchgit-1))
+        #if [ $level_searchgit -eq 1 ]; then
+        #    echo "";
+        #fi
+
+        #level_searchgit=$(($level_searchgit-1))
         return $ret_searchgit
     fi
 }
