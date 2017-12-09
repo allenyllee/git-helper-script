@@ -14,7 +14,6 @@ echo "$EXCLUDE"
 # Negative matching using grep (match lines that do not contain foo) - Stack Overflow
 # https://stackoverflow.com/questions/3548453/negative-matching-using-grep-match-lines-that-do-not-contain-foo
 #  forcing grep to interpret the pattern as an extended regular expression using -E works, i.e. grep -vE 'negphrase1|negphrase2|negphrase3'
-
 loopforall(){
     level_loopforall=$(($level_loopforall+1))
     if [ $level_loopforall -eq 1 ]; then
@@ -53,7 +52,7 @@ loopforall(){
         echo "****************** end of level 0 ***********";
         echo "total number: $ret_loopforall"
     fi
-    
+
     # How can I add numbers in a bash script - Stack Overflow
     # https://stackoverflow.com/questions/6348902/how-can-i-add-numbers-in-a-bash-script
     level_loopforall=$(($level_loopforall-1))
@@ -66,51 +65,21 @@ loopforall(){
 # linux - Using grep to search for a string that has a dot in it - Stack Overflow
 # https://stackoverflow.com/questions/10346816/using-grep-to-search-for-a-string-that-has-a-dot-in-it
 # you'll need to use \\. for bash too, or use "\." to escape it from the shell.
-
 searchgit(){
     level_searchgit=$(($level_searchgit+1))
-    #if [ -z "$level_searchgit" ]; then
-    #    level_searchgit=$(($level_searchgit+1))
-    #    #echo "========= level $level_searchgit =============="
-    #fi
-
-    #if [ $level_searchgit -eq 1 ]; then
-    #    echo "========= level $level_searchgit =============="
-    #fi
 
     local ret_searchgit=0
 
-    if [ -n "$(ls -a | grep \\.git)" ];
-    then
-
-        #echo "========= level $level_searchgit =============="
+    if [ -n "$(ls -a | grep \\.git)" ];then
 
         if [ -n "$(ls -a | grep \\.gitmodules)" ]; then
-            #level_searchgit=$(($level_searchgit+1))
-
-            #if [ $level_searchgit -gt 1 ]; then
-            #    echo "========= level $level_searchgit =============="
-            #fi
-            #local tmp=$level_searchgit
             echo "parent dir: "$(pwd)""
             echo "========= level $(($level_searchgit)) =============="
             loopforall searchgit "$(pwd)"
             ret_searchgit=$?
             echo "ret_searchgit=$ret_searchgit"
-            #if [ $level_searchgit -eq $tmp ]; then
-            #    echo "========= end of level $level_searchgit =============="
-            #fi
-            #if [ $level_searchgit -gt 1 ]; then
-            #    echo "ret_searchgit=$ret_searchgit"
-            #    echo "========= end of level $(($level_searchgit)) ======="
-            #fi
             echo "========= end of level $(($level_searchgit)) ======="
-            #level_searchgit=$(($level_searchgit-1))
         fi
-
-        #if [ $level_loopforall -eq 1 ]; then
-        #    echo "========= level $level_searchgit =============="
-        #fi
 
         if [ "$DEBUG" == "-d" ];
         then
@@ -119,27 +88,14 @@ searchgit(){
         else
             eval $(eval echo "$COMMAND")
         fi
-        #ret_searchgit=1
+
         ret_searchgit=$(($ret_searchgit+1))
-
-        #if [ $level_searchgit -eq 1 ]; then
-        #    echo "ret_searchgit=$ret_searchgit"
-        #    echo "========= end of level $level_searchgit =============="
-        #fi
-
-
-        #if [ $level_loopforall -eq 1 ]; then
-        #    #echo "ret_searchgit=$ret_searchgit"
-        #    #echo "========= end of level $level_searchgit =============="
-        #    echo "";
-        #fi
 
         level_searchgit=$(($level_searchgit-1))
         return $ret_searchgit
     else
 
         if [ $level_searchgit -eq 1 ]; then
-            #echo ""
             echo "parent dir: "$(pwd)""
             echo "========= level $level_searchgit =============="
         fi
@@ -147,15 +103,11 @@ searchgit(){
         loopforall searchgit "$(pwd)"
         ret_searchgit=$?
 
-        #echo "ret_searchgit=$ret_searchgit"
-        #echo "========= end of level $level_searchgit ======="
-
         if [ $level_searchgit -eq 1 ]; then
             echo "ret_searchgit=$ret_searchgit"
             echo "========= end of level $level_searchgit ======="
             echo "";
         fi
-
 
         level_searchgit=$(($level_searchgit-1))
         return $ret_searchgit
