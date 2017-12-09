@@ -70,7 +70,10 @@ searchgit(){
 
     local ret_searchgit=0
 
-    if [ -n "$(ls -a | grep \\.git)" ];then
+    # shell - How to make grep only match if the entire line matches? - Stack Overflow
+    # https://stackoverflow.com/questions/4709912/how-to-make-grep-only-match-if-the-entire-line-matches
+    # Both anchors (^ and $) are needed.
+    if [ -n "$(ls -a | grep '^.git$' )" ];then
 
         if [ -n "$(ls -a | grep \\.gitmodules)" ]; then
             echo "parent dir: "$(pwd)""
