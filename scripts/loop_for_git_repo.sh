@@ -21,9 +21,18 @@ loopforall(){
         echo "****************** level 0 ******************";
     fi
 
+    #
+    # Local Variables
+    # http://tldp.org/LDP/abs/html/localvar.html
+    #
     local ret_loopforall=0
     local tmp_loopforall=0
 
+
+    #
+    #  BASH Shell: For Loop File Names With Spaces – nixCraft
+    # https://www.cyberciti.biz/tips/handling-filenames-with-spaces-in-bash.html
+    #
     local OLD_IFS=$IFS     # Stores Default IFS
     IFS=$'\n'        # Set it to line break
 
@@ -31,6 +40,8 @@ loopforall(){
         do  #echo "current dir is $dir and parent dir is $2";
             #echo "before ret=$ret_loopforall tmp=$tmp_loopforall";
             cd "$dir" && $1; tmp_loopforall=$?; cd $2 >/dev/null;
+            # Linux bash. for loop and function, for adding numbers - Stack Overflow
+            # https://stackoverflow.com/questions/22460266/linux-bash-for-loop-and-function-for-adding-numbers
             ret_loopforall=`expr $ret_loopforall + $tmp_loopforall`;
             #echo "after ret=$ret_loopforall tmp=$tmp_loopforall";
     done
@@ -42,8 +53,13 @@ loopforall(){
         echo "****************** end of level 0 ***********";
         echo "total number: $ret_loopforall"
     fi
+    
+    # How can I add numbers in a bash script - Stack Overflow
+    # https://stackoverflow.com/questions/6348902/how-can-i-add-numbers-in-a-bash-script
     level_loopforall=$(($level_loopforall-1))
 
+    # How to modify a global variable within a function in bash? - Stack Overflow
+    # https://stackoverflow.com/questions/23564995/how-to-modify-a-global-variable-within-a-function-in-bash
     return $ret_loopforall
 }
 
