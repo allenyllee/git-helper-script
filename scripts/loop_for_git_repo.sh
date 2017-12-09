@@ -39,6 +39,7 @@ loopforall(){
 
     if [ $level_loopforall -eq 1 ]; then
         echo "****************** end of level 0 ***********";
+        echo "total number: $ret_loopforall"
     fi
     level_loopforall=$(($level_loopforall-1))
 
@@ -50,42 +51,48 @@ loopforall(){
 # you'll need to use \\. for bash too, or use "\." to escape it from the shell.
 
 searchgit(){
-    if [ -z "$level_searchgit" ]; then
-        level_searchgit=$(($level_searchgit+1))
-        echo "========= level $level_searchgit =============="
-    fi
+    level_searchgit=$(($level_searchgit+1))
+    #if [ -z "$level_searchgit" ]; then
+    #    level_searchgit=$(($level_searchgit+1))
+    #    #echo "========= level $level_searchgit =============="
+    #fi
+
+    #if [ $level_searchgit -eq 1 ]; then
+    #    echo "========= level $level_searchgit =============="
+    #fi
 
     local ret_searchgit=0
 
     if [ -n "$(ls -a | grep \\.git)" ];
     then
-        #if [ $level_searchgit -eq 1 ]; then
-        #    echo "========= level $level_searchgit =============="
-        #fi
+
+        #echo "========= level $level_searchgit =============="
 
         if [ -n "$(ls -a | grep \\.gitmodules)" ]; then
-            level_searchgit=$(($level_searchgit+1))
+            #level_searchgit=$(($level_searchgit+1))
 
-            if [ $level_searchgit -gt 1 ]; then
-                echo "========= level $level_searchgit =============="
-            fi
+            #if [ $level_searchgit -gt 1 ]; then
+            #    echo "========= level $level_searchgit =============="
+            #fi
             #local tmp=$level_searchgit
-            #echo "========= level $(($level_searchgit)) =============="
+            echo "========= level $(($level_searchgit)) =============="
             loopforall searchgit "$(pwd)"
             ret_searchgit=$?
-            #echo "ret_searchgit=$ret_searchgit"
+            echo "ret_searchgit=$ret_searchgit"
             #if [ $level_searchgit -eq $tmp ]; then
             #    echo "========= end of level $level_searchgit =============="
             #fi
-            if [ $level_searchgit -gt 1 ]; then
-                echo "ret_searchgit=$ret_searchgit"
-                echo "========= end of level $(($level_searchgit)) ======="
-            fi
-            #echo "========= end of level $(($level_searchgit)) ======="
-            level_searchgit=$(($level_searchgit-1))
+            #if [ $level_searchgit -gt 1 ]; then
+            #    echo "ret_searchgit=$ret_searchgit"
+            #    echo "========= end of level $(($level_searchgit)) ======="
+            #fi
+            echo "========= end of level $(($level_searchgit)) ======="
+            #level_searchgit=$(($level_searchgit-1))
         fi
 
-
+        #if [ $level_loopforall -eq 1 ]; then
+        #    echo "========= level $level_searchgit =============="
+        #fi
 
         if [ "$DEBUG" == "-d" ];
         then
@@ -103,33 +110,34 @@ searchgit(){
         #fi
 
 
-        #if [ $level_loopforall -eq 1 ]; then
-        #    echo "";
-        #fi
+        if [ $level_loopforall -eq 1 ]; then
+            #echo "ret_searchgit=$ret_searchgit"
+            #echo "========= end of level $level_searchgit =============="
+            echo "";
+        fi
 
-        #level_searchgit=$(($level_searchgit-1))
+        level_searchgit=$(($level_searchgit-1))
         return $ret_searchgit
     else
-        #if [ $level_searchgit -eq 1 ]; then
-        #    echo "========= level $level_searchgit =============="
-        #fi
 
-        #echo "========= level $level_searchgit =============="
+        if [ $level_searchgit -eq 1 ]; then
+            echo "========= level $level_searchgit =============="
+        fi
+
         loopforall searchgit "$(pwd)"
         ret_searchgit=$?
+
         #echo "ret_searchgit=$ret_searchgit"
         #echo "========= end of level $level_searchgit ======="
 
-        #if [ $level_searchgit -eq 1 ]; then
-        #    echo "ret_searchgit=$ret_searchgit"
-        #    echo "========= end of level $level_searchgit =============="
-        #fi
+        if [ $level_searchgit -eq 1 ]; then
+            echo "ret_searchgit=$ret_searchgit"
+            echo "========= end of level $level_searchgit ======="
+            echo "";
+        fi
 
-        #if [ $level_searchgit -eq 1 ]; then
-        #    echo "";
-        #fi
 
-        #level_searchgit=$(($level_searchgit-1))
+        level_searchgit=$(($level_searchgit-1))
         return $ret_searchgit
     fi
 }
@@ -137,6 +145,3 @@ searchgit(){
 echo ""
 
 loopforall searchgit "$(pwd)"
-ret_total=$?
-
-echo "total number: $ret_total"
