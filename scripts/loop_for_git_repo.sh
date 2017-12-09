@@ -38,6 +38,7 @@ loopforall(){
     IFS=$OLD_IFS
 
     if [ $level_loopforall -eq 1 ]; then
+        echo ""
         echo "****************** end of level 0 ***********";
         echo "total number: $ret_loopforall"
     fi
@@ -75,6 +76,7 @@ searchgit(){
             #    echo "========= level $level_searchgit =============="
             #fi
             #local tmp=$level_searchgit
+            echo "parent dir: "$(pwd)""
             echo "========= level $(($level_searchgit)) =============="
             loopforall searchgit "$(pwd)"
             ret_searchgit=$?
@@ -110,17 +112,19 @@ searchgit(){
         #fi
 
 
-        if [ $level_loopforall -eq 1 ]; then
-            #echo "ret_searchgit=$ret_searchgit"
-            #echo "========= end of level $level_searchgit =============="
-            echo "";
-        fi
+        #if [ $level_loopforall -eq 1 ]; then
+        #    #echo "ret_searchgit=$ret_searchgit"
+        #    #echo "========= end of level $level_searchgit =============="
+        #    echo "";
+        #fi
 
         level_searchgit=$(($level_searchgit-1))
         return $ret_searchgit
     else
 
         if [ $level_searchgit -eq 1 ]; then
+            #echo ""
+            echo "parent dir: "$(pwd)""
             echo "========= level $level_searchgit =============="
         fi
 
