@@ -1,8 +1,8 @@
 #!/bin/bash
 
-COMMAND=$1
-EXCLUDE=$2
-DEBUG=$3
+COMMAND="$1"
+EXCLUDE="$2"
+DEBUG="$3"
 
 
 echo "$EXCLUDE"
