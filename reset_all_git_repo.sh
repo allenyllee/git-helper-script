@@ -24,5 +24,27 @@ SCRIPT_PATH="$SOURCE_DIR/scripts"
 
 DEBUG=$1
 
+
+#########
+# Smudge filter failed with a fresh new clone · Issue #911 · git-lfs/git-lfs
+# https://github.com/git-lfs/git-lfs/issues/911
+#
+# #Skip smudge - We'll download binary files later in a faster batch
+# git lfs install --skip-smudge
+#
+# #Do git clone here
+# git clone ...
+#
+# #Fetch all the binary files in the new clone
+# git lfs pull
+#
+# #Reinstate smudge
+# git lfs install --force
+#########
+
+git lfs install --skip-smudge
+
 # execute
-$SCRIPT_PATH/loop_for_git_repo.sh "git reset --hard HEAD" "$BASE_DIR" "$DEBUG"
+$SCRIPT_PATH/loop_for_git_repo.sh "git reset --hard HEAD\; git lfs pull" "$BASE_DIR" "$DEBUG"
+
+git lfs install --force
