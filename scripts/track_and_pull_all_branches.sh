@@ -31,7 +31,32 @@ git fetch --all
 # checkout branch that HEAD pointed
 HEAD_BRANCH="$(git branch -r | grep 'HEAD')"
 HEAD_BRANCH="${HEAD_BRANCH#*origin/HEAD -> *origin/}"
-git pull; STATUS="$?"; if [ $STATUS -gt "0" ];then git checkout "$HEAD_BRANCH";fi
+
+
+# git - How does origin/HEAD get set? - Stack Overflow
+# https://stackoverflow.com/questions/8839958/how-does-origin-head-get-set
+# 
+# if there are no remote origin/HEAD was set
+if [ -z "$HEAD_BRANCH"  ];then
+    git remote set-head origin -a # auto set remote origin/HEAD
+    HEAD_BRANCH="$(git branch -r | grep 'HEAD')"
+    HEAD_BRANCH="${HEAD_BRANCH#*origin/HEAD -> *origin/}"
+fi
+
+# How to get the current branch name in Git? - Stack Overflow
+# https://stackoverflow.com/questions/6245570/how-to-get-the-current-branch-name-in-git
+# 
+# get the name of current branch
+CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+if [ "$CURRENT_BRANCH" == "HEAD" ];then git checkout "$HEAD_BRANCH";fi
+
+# How to see which git branches are tracking which remote / upstream branch? - Stack Overflow
+# https://stackoverflow.com/questions/4950725/how-to-see-which-git-branches-are-tracking-which-remote-upstream-branch/10035630#10035630
+# 
+# get upstream name
+UPSTREAM="$(git rev-parse --abbrev-ref "$HEAD_BRANCH"@{upstream})"
+if [ -z "$UPSTREAM" ];then git branch --set-upstream-to=origin/"$HEAD_BRANCH" "$HEAD_BRANCH";fi
+
 
 git pull --all
 
