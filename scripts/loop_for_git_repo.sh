@@ -89,6 +89,7 @@ searchgit(){
             #echo "current dir is $PWD"
             echo $(eval echo "$COMMAND")
         else
+            echo "current dir is $PWD"
             eval $(eval echo "$COMMAND")
         fi
 
