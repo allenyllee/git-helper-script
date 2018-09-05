@@ -15,6 +15,7 @@ SCRIPT_PATH="$SOURCE_DIR/scripts"
 DEBUG=$1
 
 
+
 # execute
-$SCRIPT_PATH/loop_for_git_repo.sh "$SCRIPT_PATH/track_and_pull_all_branches.sh" "$BASE_DIR" "$DEBUG"
+$SCRIPT_PATH/loop_for_git_repo.sh "$SCRIPT_PATH/set_current_branch_as_HEAD.sh" "$BASE_DIR" "$DEBUG"
 
