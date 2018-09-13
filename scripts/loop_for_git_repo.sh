@@ -86,7 +86,7 @@ searchgit(){
 
         if [ "$DEBUG" == "-d" ];
         then
-            #echo "current dir is $PWD"
+            echo "current dir is $PWD"
             echo $(eval echo "$COMMAND")
         else
             echo "current dir is $PWD"
